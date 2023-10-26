@@ -1,0 +1,201 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+class Adresa {
+    private:
+    string oras;
+    string strada;
+    string cod_postal;
+public:
+    Adresa() {
+      cout << "Introdu orasul: ";
+      cin>>oras;
+      cout << "Introdu strada: ";
+      cin.ignore();
+      getline(cin, strada);
+      cout << "Introdu codul postal: ";
+      cin >> cod_postal;
+    }
+
+    Adresa(const Adresa& proiect)
+        : strada(proiect.strada), oras(proiect.oras), cod_postal(proiect.cod_postal) {}
+
+    Adresa& operator=(const Adresa& proiect) {
+        if (this == &proiect) {
+            return *this;
+        }
+        oras = proiect.oras;
+        strada = proiect.strada;
+        cod_postal = proiect.cod_postal;
+        return *this;
+    }
+
+    ~Adresa() {
+        //cout<<"Destructorul a fost apelat";
+    }
+
+    friend ostream& operator<<(ostream& os, const Adresa& adresa) {
+        os << adresa.oras << " " << adresa.strada << " " << adresa.cod_postal;
+        return os;
+    }
+};
+
+class Salariu {
+    private:
+    int  numar;
+public:
+    Salariu() {
+        cout << "Introdu salariul: ";
+        cin >> numar;
+    }
+
+    Salariu(const Salariu& proiect)
+        : numar(proiect.numar) {}
+
+    Salariu& operator=(const Salariu& proiect1) {
+        if (this == &proiect1) {
+            return *this;
+        }
+        numar = proiect1.numar;
+        return *this;
+    }
+
+    ~Salariu() {
+    }
+
+    friend ostream& operator<<(ostream& os, const Salariu& proiect2) {
+        os << "Salariu: " << proiect2.numar;
+        return os;
+    }
+
+
+};
+
+class Persoana {
+    private:
+    string nume;
+    string prenume;
+    Adresa adresa;
+    Salariu salariu;
+    int varsta;
+public:
+    Persoana(const string& nume, const string& prenume, const Adresa& adresa, const Salariu& salariu, int varsta)
+        : nume(nume), prenume(prenume), adresa(adresa), salariu(salariu), varsta(varsta) {
+    }
+
+    Persoana(const Persoana& proiect3)
+        : nume(proiect3.nume), prenume(proiect3.prenume), adresa(proiect3.adresa), salariu(proiect3.salariu), varsta(proiect3.varsta) {}
+
+    Persoana& operator=(const Persoana& proiect4) {
+        if (this == &proiect4) {
+            return *this;
+        }
+        nume = proiect4.nume;
+        prenume = proiect4.prenume;
+        adresa = proiect4.adresa;
+        salariu = proiect4.salariu;
+        varsta = proiect4.varsta;
+        return *this;
+    }
+
+
+    ~Persoana() {
+    }
+
+    friend ostream& operator<<(ostream& os, const Persoana& persoana) {
+        os << persoana.nume << " " << persoana.prenume << endl << "Adresa: " << persoana.adresa << endl << persoana.salariu << endl << "Varsta: " << persoana.varsta ;
+        return os;
+    }
+
+};
+
+class Companie {
+    private:
+    string nume;
+    Adresa adresa;
+    vector<Persoana> lista_persoane;
+public:
+    Companie(const string& nume, const Adresa& adresa)
+        : nume(nume), adresa(adresa) {
+    }
+
+    Companie(const Companie& proiect5)
+    : nume(proiect5.nume), adresa(proiect5.adresa), lista_persoane(proiect5.lista_persoane) {
+}
+    Companie& operator=(const Companie& proiect6) {
+    if (this != &proiect6) {
+        nume = proiect6.nume;
+        adresa = proiect6.adresa;
+        lista_persoane = proiect6.lista_persoane;
+    }
+    return *this;
+}
+
+    ~Companie() {
+    }
+
+    friend ostream& operator<<(ostream& os, const Companie& companie) {
+        os << "Compania: " << companie.nume << endl << "Adresa: " << companie.adresa;
+        return os;
+    }
+
+    void adauga_persoana(const Persoana& persoana) {
+        lista_persoane.push_back(persoana);
+    }
+
+  void afiseaza_persoane() {
+    cout << "Persoanele angajate companiei  " << nume << " :"<<endl;
+    for ( int i = 0; i < lista_persoane.size(); ++i) {
+        cout << lista_persoane[i] << "\n";
+    }
+}
+
+};
+
+int main() {
+    cout << "Introdu numele companiei: ";
+    string nume_companie;
+    cin.ignore();
+    getline(cin , nume_companie);
+
+    Adresa adresa_companie;
+    Companie companie(nume_companie, adresa_companie);
+    int nr_persoane;
+    cout << "Introdu numarul de angajati din companie: ";
+    cin >> nr_persoane;
+
+    vector<Persoana> lista_persoane;
+
+    for (int i = 0; i < nr_persoane; i++) {
+        string nume, prenume;
+        int varsta;
+
+        cout << "Introdu numele pentru persoana " << i + 1 << ": ";
+        cin >> nume;
+        cout << "Introdu prenumele: ";
+        cin >> prenume;
+
+        cout << "Introdu varsta pentru persoana " << i + 1 << ": ";
+        cin >> varsta;
+
+        Adresa adresa_persoana;
+
+        Salariu salariu_persoana;
+
+        Persoana persoana(nume, prenume, adresa_persoana, salariu_persoana, varsta);
+
+
+        lista_persoane.push_back(persoana);
+    }
+
+    cout << endl << "Informatii despre:"<< endl;
+    cout << companie << endl;
+
+    for (int i = 0; i < lista_persoane.size(); i++) {
+        companie.adauga_persoana(lista_persoane[i]);
+
+    }
+    companie.afiseaza_persoane();
+
+    return 0;
+}
