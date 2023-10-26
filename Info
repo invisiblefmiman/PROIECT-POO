@@ -1,0 +1,8 @@
+ Clasa Adresa : 
+       -aceasta stocheaza informatii despre adrese,oras , cod postal si strada
+ Clasa Salariu :
+       - stocheaza informatii depsre salariu
+Clasa Persoana :
+      - stocheaza numele , prenumele , salariu , adresa si varsta unei persoane
+Clasa Companie : 	
+         - stocheaza numele si adresa unei companii , respectiv si numarul de angajati
