@@ -1,0 +1,429 @@
+#pragma once
+
+#include <iostream>
+#include <stdexcept>
+
+using namespace std;
+
+class ContEconomii {
+public:
+    ContEconomii(const string& detinator, double sold_initial, double dobanda = DEFAULT_DOBANDA);
+
+    void proceseazaTranzactie(double suma);
+    void afiseazaSold() const;
+    void efectueazaRetragere(double suma);
+    void transferaBani(ContEconomii& destinatar, double suma);
+    void adaugaDobanda();
+    void actualizeazaProfitabilitate() const;
+
+    double getSold() const;
+
+    static int getTotalConturi();
+
+private:
+    string detinator_;
+    double sold_;
+    double dobanda_;
+
+    static int numarConturi_;
+    static const double DEFAULT_DOBANDA;
+};
+
+#include "ContEconomii.h"
+
+const double ContEconomii::DEFAULT_DOBANDA = 0.05;
+int ContEconomii::numarConturi_ = 0;
+
+ContEconomii::ContEconomii(const string& detinator, double sold_initial, double dobanda)
+    : detinator_(detinator), sold_(sold_initial), dobanda_(dobanda) {
+    numarConturi_++;
+}
+
+void ContEconomii::proceseazaTranzactie(double suma) {
+    sold_ += suma;
+}
+
+void ContEconomii::afiseazaSold() const {
+    cout << "Soldul contului pentru " << detinator_ << ": " << sold_ << " RON\n";
+}
+
+void ContEconomii::efectueazaRetragere(double suma) {
+    if (suma > sold_) {
+        throw runtime_error("Fonduri insuficiente pentru retragere în ContEconomii!");
+    }
+    sold_ -= suma;
+}
+
+void ContEconomii::transferaBani(ContEconomii& destinatar, double suma) {
+    efectueazaRetragere(suma);
+    destinatar.proceseazaTranzactie(suma);
+}
+
+double ContEconomii::getSold() const {
+    return sold_;
+}
+
+int ContEconomii::getTotalConturi() {
+    return numarConturi_;
+}
+
+void ContEconomii::adaugaDobanda() {
+    double dobanda_generata = getSold() * dobanda_;
+    proceseazaTranzactie(dobanda_generata);
+}
+
+void ContEconomii::actualizeazaProfitabilitate() const {
+}
+
+#pragma once
+
+#include <iostream>
+#include <stdexcept>
+
+using namespace std;
+
+class ContCurent {
+public:
+    ContCurent(const string& detinator, double sold_initial, double limita_descoperire);
+
+    void proceseazaTranzactie(double suma);
+    void afiseazaSold() const;
+    void efectueazaRetragere(double suma);
+    void transferaBani(ContCurent& destinatar, double suma);
+    void afiseazaSoldCuLimita() const;
+
+    double getSold() const;
+
+    static int getTotalConturi();
+
+private:
+    string detinator_;
+    double sold_;
+    double limita_descoperire_;
+
+    static int numarConturi_;
+};
+
+#include "ContCurent.h"
+
+int ContCurent::numarConturi_ = 0;
+
+ContCurent::ContCurent(const string& detinator, double sold_initial, double limita_descoperire)
+    : detinator_(detinator), sold_(sold_initial), limita_descoperire_(limita_descoperire) {
+    numarConturi_++;
+}
+
+void ContCurent::proceseazaTranzactie(double suma) {
+    sold_ += suma;
+}
+
+void ContCurent::afiseazaSold() const {
+    cout << "Soldul contului pentru " << detinator_ << ": " << sold_ << " RON\n";
+}
+
+void ContCurent::efectueazaRetragere(double suma) {
+    if (suma > sold_ + limita_descoperire_) {
+        throw runtime_error("Fonduri insuficiente pentru retragere în ContCurent!");
+    }
+    sold_ -= suma;
+}
+
+void ContCurent::transferaBani(ContCurent& destinatar, double suma) {
+    efectueazaRetragere(suma);
+    destinatar.proceseazaTranzactie(suma);
+}
+
+double ContCurent::getSold() const {
+    return sold_;
+}
+
+int ContCurent::getTotalConturi() {
+    return numarConturi_;
+}
+
+void ContCurent::afiseazaSoldCuLimita() const {
+    cout << "Soldul contului pentru " << detinator_ << " cu limita de descoperire: " << getSold() << " RON\n";
+}
+
+#pragma once
+
+#include <iostream>
+#include <stdexcept>
+
+using namespace std;
+
+class ContInvestitii {
+public:
+    ContInvestitii(const string& detinator, double sold_initial, double profitabilitate = DEFAULT_PROFITABILITATE);
+
+    void proceseazaTranzactie(double suma);
+    void afiseazaSold() const;
+    void efectueazaRetragere(double suma);
+    void transferaBani(ContInvestitii& destinatar, double suma);
+    void adaugaDobanda();
+    void actualizeazaProfitabilitate() const;
+
+    double getSold() const;
+
+    static int getTotalConturi();
+
+private:
+    string detinator_;
+    double sold_;
+    double profitabilitate_;
+
+    static int numarConturi_;
+    static const double DEFAULT_PROFITABILITATE;
+};
+
+#include "ContInvestitii.h"
+
+const double ContInvestitii::DEFAULT_PROFITABILITATE = 0.1;
+int ContInvestitii::numarConturi_ = 0;
+
+ContInvestitii::ContInvestitii(const string& detinator, double sold_initial, double profitabilitate)
+    : detinator_(detinator), sold_(sold_initial), profitabilitate_(profitabilitate) {
+    numarConturi_++;
+}
+
+void ContInvestitii::proceseazaTranzactie(double suma) {
+    sold_ += suma;
+}
+
+void ContInvestitii::afiseazaSold() const {
+    cout << "Soldul contului pentru " << detinator_ << ": " << sold_ << " RON\n";
+}
+
+void ContInvestitii::efectueazaRetragere(double suma) {
+    if (suma > sold_) {
+        throw runtime_error("Fonduri insuficiente pentru retragere în ContInvestitii!");
+    }
+    sold_ -= suma;
+}
+
+void ContInvestitii::transferaBani(ContInvestitii& destinatar, double suma) {
+    efectueazaRetragere(suma);
+    destinatar.proceseazaTranzactie(suma);
+}
+
+double ContInvestitii::getSold() const {
+    return sold_;
+}
+
+int ContInvestitii::getTotalConturi() {
+    return numarConturi_;
+}
+
+void ContInvestitii::adaugaDobanda() {
+    double dobanda_generata = getSold() * profitabilitate_;
+    proceseazaTranzactie(dobanda_generata);
+}
+
+void ContInvestitii::actualizeazaProfitabilitate() const {
+}
+
+#pragma once
+
+template <typename T>
+class Observer {
+public:
+    virtual void update(const T& data) = 0;
+};
+
+#pragma once
+
+#include <memory>
+#include <vector>
+
+template <typename T>
+class Observer;
+
+template <typename T>
+class Observable {
+public:
+    void addObserver(std::shared_ptr<Observer<T>> observer) {
+        observers_.push_back(observer);
+    }
+
+    void notifyObservers(const T& data) {
+        for (const auto& observer : observers_) {
+            observer->update(data);
+        }
+    }
+
+private:
+    std::vector<std::shared_ptr<Observer<T>>> observers_;
+};
+
+#pragma once
+
+#include <iostream>
+#include <memory>
+
+template <typename T>
+class Observer;
+
+template <typename T>
+class Observable;
+
+template <typename T>
+class ContTemplate;
+
+template <typename T>
+class ContTemplate : public Observable<T> {
+public:
+    ContTemplate(const string& detinator, T sold_initial);
+
+    void proceseazaTranzactie(T suma);
+    void afiseazaSold() const;
+    void efectueazaRetragere(T suma);
+    void transferaBani(ContTemplate<T>& destinatar, T suma);
+
+    T getSold() const;
+
+    static int getTotalConturi();
+
+    template <typename U>
+    static U adunaSolduri(U sold1, U sold2);
+
+    static std::shared_ptr<ContTemplate<T>> getInstance();
+
+private:
+    static std::shared_ptr<ContTemplate<T>> instance;
+    static int numarConturi_;
+    string detinator_;
+    T sold_;
+};
+
+#include "ContTemplate.h"
+
+template <typename T>
+std::shared_ptr<ContTemplate<T>> ContTemplate<T>::instance = nullptr;
+
+template <typename T>
+int ContTemplate<T>::numarConturi_ = 0;
+
+template <typename T>
+ContTemplate<T>::ContTemplate(const string& detinator, T sold_initial)
+    : detinator_(detinator), sold_(sold_initial) {
+    numarConturi_++;
+}
+
+template <typename T>
+void ContTemplate<T>::proceseazaTranzactie(T suma) {
+    sold_ += suma;
+    this->notifyObservers(suma);
+}
+
+template <typename T>
+void ContTemplate<T>::afiseazaSold() const {
+    cout << "Soldul contului pentru " << detinator_ << ": " << sold_ << " RON\n";
+}
+
+template <typename T>
+void ContTemplate<T>::efectueazaRetragere(T suma) {
+    if (suma > sold_) {
+        throw runtime_error("Fonduri insuficiente pentru retragere în ContTemplate!");
+    }
+    sold_ -= suma;
+    this->notifyObservers(-suma);
+}
+
+template <typename T>
+void ContTemplate<T>::transferaBani(ContTemplate<T>& destinatar, T suma) {
+    efectueazaRetragere(suma);
+    destinatar.proceseazaTranzactie(suma);
+}
+
+template <typename T>
+T ContTemplate<T>::getSold() const {
+    return sold_;
+}
+
+template <typename T>
+int ContTemplate<T>::getTotalConturi() {
+    return numarConturi_;
+}
+
+template <typename T>
+template <typename U>
+U ContTemplate<T>::adunaSolduri(U sold1, U sold2) {
+    return sold1 + sold2;
+}
+
+template <typename T>
+std::shared_ptr<ContTemplate<T>> ContTemplate<T>::getInstance() {
+    if (!instance) {
+        instance = std::make_shared<ContTemplate<T>>("SingletonInstance", 0);
+    }
+    return instance;
+}
+
+#pragma once
+
+#include "ContTemplate.h"
+
+class ContFactory {
+public:
+    template <typename T>
+    static ContTemplate<T> createAccount(const string& detinator, T sold_initial);
+};
+
+#include "ContFactory.h"
+
+template <typename T>
+ContTemplate<T> ContFactory::createAccount(const string& detinator, T sold_initial) {
+    return ContTemplate<T>(detinator, sold_initial);
+}
+#include "ContEconomii.h"
+#include "ContCurent.h"
+#include "ContInvestitii.h"
+#include "ContTemplate.h"
+#include "ContFactory.h"
+
+int main() {
+    ContEconomii contEconomii("Marinela Ionescu", 1000.0);
+    contEconomii.afiseazaSold();
+    contEconomii.proceseazaTranzactie(500.0);
+    contEconomii.afiseazaSold();
+    contEconomii.efectueazaRetragere(200.0);
+    contEconomii.afiseazaSold();
+    contEconomii.adaugaDobanda();
+    contEconomii.afiseazaSold();
+
+
+    ContCurent contCurent("Marius Cristi", 2000.0, 500.0);
+    contCurent.afiseazaSold();
+    contCurent.proceseazaTranzactie(300.0);
+    contCurent.afiseazaSold();
+    contCurent.efectueazaRetragere(250.0);
+    contCurent.afiseazaSold();
+
+
+    double transferAmount = 150.0;
+    contCurent.efectueazaRetragere(transferAmount);
+    contEconomii.proceseazaTranzactie(transferAmount);
+
+    contCurent.afiseazaSold();
+    contEconomii.afiseazaSold();
+
+
+    ContInvestitii contInvestitii("Alina Costache", 5000.0);
+    contInvestitii.afiseazaSold();
+    contInvestitii.proceseazaTranzactie(1000.0);
+    contInvestitii.afiseazaSold();
+    contInvestitii.efectueazaRetragere(800.0);
+    contInvestitii.afiseazaSold();
+    contInvestitii.adaugaDobanda();
+    contInvestitii.afiseazaSold();
+
+    double investitiiToCurentAmount = 300.0;
+    contInvestitii.efectueazaRetragere(investitiiToCurentAmount);
+    contCurent.proceseazaTranzactie(investitiiToCurentAmount);
+
+    contInvestitii.afiseazaSold();
+    contCurent.afiseazaSold();
+
+
+    return 0;
+}
